@@ -4,17 +4,31 @@ import utils
 
 samples = loadSamples()
 attributes = initAttributes()
+attributeValDict = utils.extractValOnAttributeArray(samples, attributes)
 
 def TreeGenerate(samples,attributes):
     node = Node()
     if utils.samplesInOneCategory(samples) :
         node.selfCategory = samples[0].label
-        return
+        return node
     if attributes is None or 0 == len(attributes) or utils.samplesSameOnAttributes(samples,attributes) :
         # 将node标记为叶节点，其类别标记为samples中样本数最多的类
-        node.selfCategory = 'most in samples'
-        return
+        node.selfCategory = utils.determineCategoryInSamples(samples)
+        return node
+
     # 选择最优划分属性
     bestAttribute = findBestAttribute(attributes)
-    attributeVal = utils.extractValOnAttribute(samples,bestAttribute)
-    
+
+    for attributeVal in attributeValDict[bestAttribute] :
+        subNode = Node()
+        node.addChild(subNode)
+        subNode.selfJudge = {bestAttribute = attributeVal}
+        sampleSubset = utils.filterSubsetOnAttributeVal(samples,bestAttribute,attributeVal)
+        if 0 == len(sampleSubset) :
+            subNode.selfCategory = utils.determineCategoryInSamples(sampleSubset)
+            continue
+        else:
+            attributes_copy = attributes.copy()
+            attributes_copy.remove(bestAttribute)
+            subNode = TreeGenerate(sampleSubset,attributes_copy.sort())
+    return node
