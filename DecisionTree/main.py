@@ -1,9 +1,10 @@
 from bean import Sample
 from bean import Node
 import utils
+import preprocessor
 
-samples = loadSamples()
-attributes = initAttributes()
+samples = preprocessor.loadSamples()
+attributes = preprocessor.initAttributes(samples[0])
 attributeValDict = utils.extractValOnAttributeArray(samples, attributes)
 
 def TreeGenerate(samples,attributes):
@@ -22,7 +23,7 @@ def TreeGenerate(samples,attributes):
     for attributeVal in attributeValDict[bestAttribute] :
         subNode = Node()
         node.addChild(subNode)
-        subNode.selfJudge = {bestAttribute = attributeVal}
+        subNode.selfJudge = {bestAttribute, attributeVal}
         sampleSubset = utils.filterSubsetOnAttributeVal(samples,bestAttribute,attributeVal)
         if 0 == len(sampleSubset) :
             subNode.selfCategory = utils.determineCategoryInSamples(sampleSubset)

@@ -34,7 +34,7 @@ def samplesInOneCategory(samples):
 
 # 获取samples在attribute上的值，去重
 def extractValOnAttribute(samples, attribute):
-    valSet = {}
+    valSet = set()
     for item in samples:
         valSet.add(item.attributeVals[attribute])
     return valSet
@@ -70,8 +70,8 @@ def determineCategoryInSamples(samples):
     categoryDict = dict()
     for item in samples:
         label = item.label 
-        if label in categoryDict ：
-            categoryDict[label]++
+        if label in categoryDict:
+            categoryDict[label]+=1
         else :
             categoryDict[label] = 1
     max_label = 'init'
@@ -85,8 +85,8 @@ def computeCategoryPercent(samples):
     categoryDict = dict()
     for item in samples:
         label = item.label 
-        if label in categoryDict ：
-            categoryDict[label]++
+        if label in categoryDict :
+            categoryDict[label]+=1
         else :
             categoryDict[label] = 1
     for label in categoryDict:
