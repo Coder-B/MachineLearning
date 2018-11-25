@@ -4,13 +4,12 @@ class Sample:
         self.label = label
 
 class Node:
-    children = list()
-    def __init__(self, parent = None, selfJudge = None, selfCategory = None):
-        self.parent = parent
+    def __init__(self, selfJudge = None, selfCategory = None):
         # attribute = val
         self.selfJudge = selfJudge
         # label
         self.selfCategory = selfCategory
+        self.children = list()
 
-    def addChild(child):
+    def addChild(self,child):
         self.children.append(child)

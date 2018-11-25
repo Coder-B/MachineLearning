@@ -3,13 +3,14 @@ from bean import Node
 import utils
 import preprocessor
 import entropy
+import time
 
 samples = preprocessor.loadSamples()
 attributes = preprocessor.initAttributes(samples[0])
 attributeValDict = utils.extractValOnAttributeArray(samples, attributes)
 
 def TreeGenerate(samples,attributes):
-    node = Node()
+    node=Node()
     if utils.samplesInOneCategory(samples) :
         node.selfCategory = samples[0].label
         return node
@@ -20,17 +21,22 @@ def TreeGenerate(samples,attributes):
 
     # 选择最优划分属性
     bestAttribute,maxInfoGain = entropy.findBestAttribute(samples,attributes)
-
     for attributeVal in attributeValDict[bestAttribute] :
-        subNode = Node()
-        node.addChild(subNode)
-        subNode.selfJudge = {bestAttribute, attributeVal}
         sampleSubset = utils.filterSubsetOnAttributeVal(samples,bestAttribute,attributeVal)
+        subNode = None
         if 0 == len(sampleSubset) :
-            subNode.selfCategory = utils.determineCategoryInSamples(sampleSubset)
+            subNode = Node()
+            subNode.selfCategory = utils.determineCategoryInSamples(samples)
             continue
         else:
             attributes_copy = attributes.copy()
             attributes_copy.remove(bestAttribute)
-            subNode = TreeGenerate(sampleSubset,attributes_copy.sort())
+            attributes_copy.sort()
+            subNode = TreeGenerate(sampleSubset,attributes_copy)
+        subNode.selfJudge = {bestAttribute: attributeVal}
+        node.addChild(subNode)
     return node
+
+rootNode = TreeGenerate(samples,attributes)
+rootNode.selfJudge = {}
+utils.recursivePrintTree(rootNode,"")

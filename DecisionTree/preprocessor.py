@@ -28,3 +28,7 @@ def initAttributes(sample):
         attributes.append(index)
         index+=1
     return attributes
+
+def attributesMap():
+    for line in open("./watermelon.log",'r', encoding='UTF-8'):
+        return line.rstrip('\n').split(",")

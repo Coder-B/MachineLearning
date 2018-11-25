@@ -1,3 +1,5 @@
+import time
+import preprocessor
 # 获取单一sample在attributeArray上的投影
 def extractSampleValOnAttributes(sample, attributeArray):
     targetList = list()
@@ -12,7 +14,7 @@ def samplesSameOnAttributes(samples, attributeArray):
     if len(samples) == 0 :
         return False
     else:
-    	# 如果samples不为空，将第一个sample的feature取出来
+        # 如果samples不为空，将第一个sample的feature取出来
         attributeVals = extractSampleValOnAttributes(samples[0],attributeArray)
     # 逐一比较所有samples
     for item in samples:
@@ -51,7 +53,7 @@ def filterSubsetOnAttributeVal(samples, attribute, attributeVal):
     subset = list()
     for item in samples:
         if item.attributeVals[attribute] == attributeVal :
-            subset.add(item)
+            subset.append(item)
     return subset
 
 # 基于attribute值对samples进行划分
@@ -74,9 +76,11 @@ def determineCategoryInSamples(samples):
             categoryDict[label]+=1
         else :
             categoryDict[label] = 1
-    max_label = 'init'
+    maxPercent = 0
+    max_label = None
     for label in categoryDict:
-        if categoryDict[label] > categoryDict[max_label] :
+        if categoryDict[label] > maxPercent :
+            maxPercent = categoryDict[label] 
             max_label = label
     return max_label
 
@@ -92,3 +96,28 @@ def computeCategoryPercent(samples):
     for label in categoryDict:
        categoryDict[label] = categoryDict[label]/len(samples)
     return categoryDict
+
+def isRoot(node):
+    return 0==len(node.selfJudge)
+
+def formatJudge(judge):
+    attrMap = preprocessor.attributesMap()
+    for k,v in judge.items():
+        path = "{"+attrMap[k]+": "+v+"}"
+        return path
+
+
+# present decision tree
+def recursivePrintTree(node,prePath):
+    if 0 == len(node.children):
+        print(prePath,"--judge: ",formatJudge(node.selfJudge),"--category: ",node.selfCategory)
+    else:
+        path = ""
+        if isRoot(node):
+            path = "root"
+        else:
+            path = prePath+"--judge: "
+            path += formatJudge(node.selfJudge)
+        for item in node.children:
+            recursivePrintTree(item, path)
+
