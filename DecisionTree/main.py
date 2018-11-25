@@ -2,6 +2,7 @@ from bean import Sample
 from bean import Node
 import utils
 import preprocessor
+import entropy
 
 samples = preprocessor.loadSamples()
 attributes = preprocessor.initAttributes(samples[0])
@@ -18,7 +19,7 @@ def TreeGenerate(samples,attributes):
         return node
 
     # 选择最优划分属性
-    bestAttribute = findBestAttribute(attributes)
+    bestAttribute,maxInfoGain = entropy.findBestAttribute(samples,attributes)
 
     for attributeVal in attributeValDict[bestAttribute] :
         subNode = Node()

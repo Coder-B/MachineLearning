@@ -1,7 +1,7 @@
 # 获取单一sample在attributeArray上的投影
 def extractSampleValOnAttributes(sample, attributeArray):
     targetList = list()
-    for index in xrange(0,len(attributeArray)):
+    for index in range(0,len(attributeArray)):
         attributeIndex = attributeArray[index]
         targetList.append(sample.attributeVals[attributeIndex])
     return targetList
@@ -61,7 +61,7 @@ def divideSamplesOnAttribute(samples,attribute):
         val = item.attributeVals[attribute]
         if val not in divideDict:
             divideDict[val] = list()
-        divideDict[val].add(item)
+        divideDict[val].append(item)
     return divideDict
 
 

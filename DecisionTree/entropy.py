@@ -16,3 +16,14 @@ def computeInfoGain(samples,attribute):
     for attrVal in divideDict:
         gainEntropy = gainEntropy - computeInfoEntropy(divideDict[attrVal]) * len(divideDict[attrVal]) / len(samples)
     return gainEntropy
+
+# 根据信息增益选择最佳分类
+def findBestAttribute(samples,attributes):
+    maxInfoGain = 0
+    bestAttr = attributes[0]
+    for item in attributes:
+        infoGain = computeInfoGain(samples,item)
+        if maxInfoGain < infoGain:
+            maxInfoGain = infoGain
+            bestAttr = item
+    return bestAttr,maxInfoGain
